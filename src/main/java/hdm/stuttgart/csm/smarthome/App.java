@@ -14,7 +14,7 @@ import io.socket.emitter.Emitter;
  * This is a small sample app to check whether we are able to connect to a socket via the java client
  * and fetch data from a mock-implementation of the SensFloor API
  * 
- * @author Smeep
+ * @author Smeep / TEST
  *
  */
 public class App {
