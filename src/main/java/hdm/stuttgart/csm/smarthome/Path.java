@@ -47,16 +47,16 @@ public class Path {
 	public String getActDirection(){
 		String s = "";
 		if(lastTile.getPosY()<actTile.getPosY()){
-			s += "RIGHT ";
+			s += "RIGHT";
 		}
 		if(lastTile.getPosY()>actTile.getPosY()){
-			s += "LEFT ";
+			s += "LEFT";
 		}
 		if(lastTile.getPosX()<actTile.getPosX()){
-			s += "DOWN ";
+			s += "DOWN";
 		}
 		if(lastTile.getPosX()>actTile.getPosX()){
-			s += "TOP ";
+			s += "TOP";
 		}
 		return s;
 	}
