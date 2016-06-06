@@ -1,6 +1,4 @@
-package hdm.stuttgart.csm.smarthome;
-
-import hdm.stuttgart.csm.smarthome.Tile;
+package hdm.stuttgart.csm.smarthome.object;
 
 public class Path {
 	
@@ -8,8 +6,8 @@ public class Path {
 	private Tile actTile;
 	
 	public Path(){
-		lastTile = new Tile(0,0);
-		actTile = new Tile(0,0);
+		lastTile = new Tile(0,0,0);
+		actTile = new Tile(0,0,0);
 	}
 	
 	/**

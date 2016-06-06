@@ -1,19 +1,20 @@
-package hdm.stuttgart.csm.smarthome;
+package hdm.stuttgart.csm.smarthome.object;
 
 public class Tile {
 
-	private int posX; 
-	private int posY;
-	private double weight;
+	private double posX; 
+	private double posY;
+	private long capacity;
 	
 	/**
 	 * Create a new Tile instance with posX and posY
 	 * @param posX
 	 * @param posY
 	 */
-	public Tile(int posX, int posY){
+	public Tile(double posX, double posY, long capacity){
 		this.posX = posX;
 		this.posY = posY;
+		this.capacity = capacity;
 	}
 	
 	/**
@@ -21,14 +22,14 @@ public class Tile {
 	 * @return
 	 */
 	public boolean isActive(){
-		return (this.getWeight() > 0);
+		return (this.getCapacity() > 0);
 	}
 	
 	/**
 	 * Get the tiles x position
 	 * @return
 	 */
-	public int getPosX(){
+	public double getPosX(){
 		return this.posX;
 	}
 	
@@ -36,7 +37,7 @@ public class Tile {
 	 * Get the tile's y position
 	 * @return
 	 */
-	public int getPosY(){
+	public double getPosY(){
 		return this.posY;
 	}
 	
@@ -44,15 +45,15 @@ public class Tile {
 	 * Set the weight of the tile
 	 * @param weight
 	 */
-	public void setWeight(double weight){
-		this.weight = weight;
+	public void setCapacity(long capacity){
+		this.capacity = capacity;
 	}
 	
 	/**
 	 * Get the tile's weight
 	 * @return
 	 */
-	public double getWeight(){
-		return this.weight;
+	public long getCapacity(){
+		return this.capacity;
 	}
 }
