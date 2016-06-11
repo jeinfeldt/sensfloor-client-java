@@ -1,6 +1,5 @@
 package hdm.stuttgart.csm.smarthome.prototyp;
 
-import java.net.URISyntaxException;
 import hdm.stuttgart.csm.smarthome.event.ClusterEventHandler;
 import hdm.stuttgart.csm.smarthome.object.SensFloor;
 
