@@ -21,13 +21,14 @@ public class App {
 	public static final String SMARTLAB_HOST = "192.168.178.25";
 	public static final String PORT = "8000";
 	public static final String HUE_URL = "http://biffel:8080/CMD?Sleeping=";
+	public static final String PROPERTY_PATH = "sensfloor-config.properties";
 	
 	public static void main(String[] args) {	
 		try {
 			// connect to the machine
-			SensFloor carpet = new SensFloor("sensfloor-config.properties");
+			SensFloor carpet = new SensFloor(PROPERTY_PATH);
 			// initialize and add listeners
-			ClusterEventHandler hueHandler = new HueClusterEventHandler(HUE_URL);
+			ClusterEventHandler hueHandler = new HueClusterEventHandler(HUE_URL, true);
 			carpet.addClusterEventHandler(hueHandler);
 			// opening connection
 			carpet.openConnection();

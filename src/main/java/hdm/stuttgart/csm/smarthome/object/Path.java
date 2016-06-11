@@ -4,59 +4,91 @@ public class Path {
 	
 	private Tile lastTile;
 	private Tile actTile;
+	private Tile referenceTile;
+	private Direction x;
+	private Direction y;
+	private Direction reference;
+	private Double lastReferenceDistance;
 	
-	public Path(){
-		lastTile = new Tile(0,0,0);
-		actTile = new Tile(0,0,0);
+	public Path(Tile referenceTile){
+		this.lastTile = new Tile(0,0,0);
+		this.actTile = new Tile(0,0,0);
+		this.referenceTile = referenceTile;
 	}
 	
+	// logic
 	/**
-	 * Set the active tile and last tile
+	 * Refresshes path information with current tile from carpet. All direction information are
+	 * automatically updated after calling this method.
 	 * @param tile
 	 */
 	public void setActTile(Tile tile){
 		this.lastTile = this.actTile; 
 		this.actTile = tile;
+		refreshDirections();
+	}
+		
+	// utilities
+	private void refreshDirections(){
+		refreshX();
+		refreshY();
+		refreshReference();
 	}
 	
-	/**
-	 * Get the last active tile
-	 * @return
-	 */
+	private void refreshX(){
+		this.x = Direction.UNCHANGED;
+		if(actTile.getPosX() > lastTile.getPosX()){
+			this.x = Direction.INCR_X;
+		} else if(actTile.getPosX() < lastTile.getPosX()) {
+			this.x = Direction.DECR_X;
+		}
+	}
+	
+	private void refreshY(){
+		this.y = Direction.UNCHANGED;
+		if(actTile.getPosY() > lastTile.getPosY()){
+			this.y = Direction.INCR_Y;
+		} else if(actTile.getPosY() < lastTile.getPosY()) {
+			this.y = Direction.DECR_Y;
+		}
+	}
+	
+	private void refreshReference(){
+		this.reference = Direction.UNCHANGED;
+		double actDistance = calculateDistance(actTile.getPosX(), referenceTile.getPosX(), actTile.getPosY(), referenceTile.getPosY());
+		// guard clause for reference distance
+		if(lastReferenceDistance == null){
+			lastReferenceDistance = actDistance;
+			return;
+		}
+		
+		// if distances can be compared
+		if(actDistance < lastReferenceDistance){
+			this.reference = Direction.DECR_REFERENCE_DIST;
+		} else if(actDistance > lastReferenceDistance){
+			this.reference = Direction.INCR_REFERENCE_DIST;
+		}
+		lastReferenceDistance = actDistance;
+	}
+
+	private double calculateDistance(double x1,double x2,double y1,double y2){
+		return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) );
+	}
+	
+	// GETTERS AND SETTERS
+	public Direction getXDirection(){
+		return this.x;
+	}
+	
+	public Direction getYDirection(){
+		return this.y;
+	}
+	
+	public Direction getReferenceDirection(){
+		return this.reference;
+	}
+	
 	public Tile getLastTile(){
 		return this.lastTile;
 	}
-	
-	/**
-	 * Get the active tile
-	 * @return
-	 */
-	public Tile getActTile(){
-		return this.actTile;
-	}
-	
-	
-	/**
-	 * Get the direction between two active tiles
-	 * @param tile1
-	 * @param tile2
-	 * @return
-	 */
-	public String getActDirection(){
-		String s = "";
-		if(lastTile.getPosY()<actTile.getPosY()){
-			s += "RIGHT";
-		}
-		if(lastTile.getPosY()>actTile.getPosY()){
-			s += "LEFT";
-		}
-		if(lastTile.getPosX()<actTile.getPosX()){
-			s += "DOWN";
-		}
-		if(lastTile.getPosX()>actTile.getPosX()){
-			s += "TOP";
-		}
-		return s;
-	}
-	
 }

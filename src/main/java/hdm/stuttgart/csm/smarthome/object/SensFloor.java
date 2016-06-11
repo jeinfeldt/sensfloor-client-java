@@ -25,17 +25,25 @@ public class SensFloor {
 	private final String PROTOCOL_KEY = "protocol";
 	private final String HOST_KEY = "host";
 	private final String PORT_KEY = "port";
+	private final String REFERENCE_X_KEY = "referenceX";
+	private final String REFERENCE_Y_KEY = "referenceY";
 	
 	// attributes
 	private Socket socket;
 	private ISensFloorConnector connector;
 	private List<ClusterEventHandler> clusterHandlers;
 	private Properties prop;
-	
+	private Tile referenceTile = new Tile(0 ,0, 0);
 	
 	// constructors
 	public SensFloor(String protocol, String address, String port){
 		this.connector = new SensFloorConnector(protocol, address, port);
+		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
+	}
+	
+	public SensFloor(String protocol, String address, String port, Tile referenceTile){
+		this.connector = new SensFloorConnector(protocol, address, port);
+		this.referenceTile = referenceTile;
 		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
 	}
 	
@@ -44,18 +52,28 @@ public class SensFloor {
 		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
 	}
 	
+	public SensFloor(ISensFloorConnector connector, Tile referenceTile){
+		this.connector = connector;
+		this.referenceTile = referenceTile;
+		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
+	}
+	
 	public SensFloor(String propertyFile) throws IOException{
 		this.prop = readProperties(propertyFile);
 		this.connector = new SensFloorConnector(prop.getProperty(PROTOCOL_KEY),
 				prop.getProperty(HOST_KEY), prop.getProperty(PORT_KEY));
 		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
+		// reading reference tile
+		double refX = Double.parseDouble(prop.getProperty(REFERENCE_X_KEY));
+		double refY = Double.parseDouble(prop.getProperty(REFERENCE_Y_KEY));
+		this.referenceTile = new Tile(refX, refY, 0);
 	}
 	
 	// connection
 	public void openConnection() throws URISyntaxException{
 		socket = connector.connect();
 		// add event listeners
-		socket.on("cluster", new ClusterListener(clusterHandlers));
+		socket.on("cluster", new ClusterListener(clusterHandlers, referenceTile));
 	}
 	
 	public void closeConnection(){
@@ -87,23 +105,6 @@ public class SensFloor {
 		}
 		return prop;
 	}
-	/*
-	public void show(){
-		for(int i=0; i<getWidth(); i++){
-			for(int j=0; j<getHeight(); j++){
-				if(tiles[i][j] == path.getLastTile()){
-					System.out.print("L");
-				}else if(tiles[i][j].isActive()){
-					System.out.print("X");
-				}else{
-					System.out.print(".");					
-				}
-			}
-			System.out.println();
-		}
-		System.out.println();
-	}
-	*/
 	
 	// GETTERS AND SETTERS
 	public Properties getProperties() {

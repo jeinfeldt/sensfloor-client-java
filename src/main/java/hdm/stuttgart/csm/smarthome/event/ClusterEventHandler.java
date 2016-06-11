@@ -1,11 +1,13 @@
 package hdm.stuttgart.csm.smarthome.event;
 
+import hdm.stuttgart.csm.smarthome.object.Path;
 import hdm.stuttgart.csm.smarthome.object.Tile;
 
 public abstract class ClusterEventHandler {
 	
 	protected Tile cog;
 	protected Tile [] points;
+	protected Path path;
 	
 	public abstract void execute();
 
@@ -24,5 +26,13 @@ public abstract class ClusterEventHandler {
 	
 	public Tile [] getPoints(){
 		return this.points;
+	}
+	
+	public void setPath(Path path){
+		this.path = path;
+	}
+	
+	public Path getPath(){
+		return this.path;
 	}
 }

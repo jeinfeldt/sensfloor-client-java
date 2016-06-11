@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import hdm.stuttgart.csm.smarthome.object.Path;
 import hdm.stuttgart.csm.smarthome.object.Tile;
 import io.socket.emitter.Emitter;
 
@@ -23,20 +24,27 @@ public class ClusterListener implements Emitter.Listener{
 	private List<ClusterEventHandler> list;
 	private JSONObject cog;
 	private JSONArray points;
-	private Tile debug_cog = new Tile(2, 2, 150); //TODO remove
+	private Path path;
+	private Tile referenceTile;
 	
-	public ClusterListener(List <ClusterEventHandler> list){
+	public ClusterListener(List <ClusterEventHandler> list, Tile referenceTile){
 		this.list = list;
+		this.referenceTile = referenceTile;
+		this.path = new Path(this.referenceTile);
 	}
 	
 	public void call(Object... args) {
 		// parse json
-		//parseJSON(args[0].toString()); XXX
+		parseJSON(args[0].toString());
 		// init values
-		//Tile cog = initCOG(); XXX
+		Tile cog = parseJSONTile(this.cog);
+		Tile [] points = initPoints();
 		// prepare and execute listeners
 		for(ClusterEventHandler currentHandler: list){
-			currentHandler.setCOG(debug_cog);
+			path.setActTile(cog);
+			currentHandler.setPath(path);
+			currentHandler.setCOG(cog);
+			currentHandler.setPoints(points);
 			currentHandler.execute();
 		}
 	}
@@ -52,17 +60,20 @@ public class ClusterListener implements Emitter.Listener{
 		}
 	}
 	
-	private Tile initCOG(){
-		// fetch values
-		double x = (Double) cog.get(X_KEY);
-		double y = (Double) cog.get(Y_KEY);
-		long c = (Long) cog.get(CAPACITY_KEY);
-		return new Tile(x, y, c);
+	private Tile[] initPoints(){
+		Tile[] result = new Tile[points.size()];
+		for(int i=0; i<points.size(); i+=1){
+			JSONObject current = (JSONObject) points.get(i);
+			result[i] = parseJSONTile(current);
+		}
+		return result;
 	}
 	
-	private Tile[] initPoints(){
-		// TODO: Placeholder
-		return null;
+	private Tile parseJSONTile(JSONObject tile){
+		Double x =  Double.parseDouble((String)tile.get(X_KEY));
+		Double y = Double.parseDouble((String)tile.get(Y_KEY));;
+		Long c = (Long) tile.get(CAPACITY_KEY);
+		return new Tile(x, y, c);
 	}
 	
 
