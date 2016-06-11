@@ -1,8 +1,12 @@
 package hdm.stuttgart.csm.smarthome.object;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import hdm.stuttgart.csm.smarthome.connect.ISensFloorConnector;
 import hdm.stuttgart.csm.smarthome.connect.SensFloorConnector;
@@ -17,11 +21,16 @@ import io.socket.client.Socket;
  * 3. Open Connection
  */
 public class SensFloor {
+	// constants
+	private final String PROTOCOL_KEY = "protocol";
+	private final String HOST_KEY = "host";
+	private final String PORT_KEY = "port";
 	
 	// attributes
 	private Socket socket;
 	private ISensFloorConnector connector;
 	private List<ClusterEventHandler> clusterHandlers;
+	private Properties prop;
 	
 	
 	// constructors
@@ -32,6 +41,13 @@ public class SensFloor {
 	
 	public SensFloor(ISensFloorConnector connector){
 		this.connector = connector;
+		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
+	}
+	
+	public SensFloor(String propertyFile) throws IOException{
+		this.prop = readProperties(propertyFile);
+		this.connector = new SensFloorConnector(prop.getProperty(PROTOCOL_KEY),
+				prop.getProperty(HOST_KEY), prop.getProperty(PORT_KEY));
 		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
 	}
 	
@@ -61,6 +77,16 @@ public class SensFloor {
 	}
 	
 	// utilities
+	private Properties readProperties(String propertyFile) throws IOException{
+		Properties prop = new Properties();
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propertyFile);
+		if (inputStream != null) {
+			prop.load(inputStream);
+		} else {
+			throw new FileNotFoundException("property file '" + propertyFile + "' not found");
+		}
+		return prop;
+	}
 	/*
 	public void show(){
 		for(int i=0; i<getWidth(); i++){
@@ -78,4 +104,13 @@ public class SensFloor {
 		System.out.println();
 	}
 	*/
+	
+	// GETTERS AND SETTERS
+	public Properties getProperties() {
+		return prop;
+	}
+
+	public void setProperties(Properties properties) {
+		this.prop = properties;
+	}
 }

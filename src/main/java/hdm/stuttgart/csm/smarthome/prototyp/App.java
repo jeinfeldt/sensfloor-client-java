@@ -22,17 +22,17 @@ public class App {
 	public static final String PORT = "8000";
 	public static final String HUE_URL = "http://biffel:8080/CMD?Sleeping=";
 	
-	public static void main(String[] args) throws Exception {	
+	public static void main(String[] args) {	
 		try {
 			// connect to the machine
-			SensFloor carpet = new SensFloor(PROTOCOL, LOCALHOST, PORT);
+			SensFloor carpet = new SensFloor("sensfloor-config.properties");
 			// initialize and add listeners
 			ClusterEventHandler hueHandler = new HueClusterEventHandler(HUE_URL);
 			carpet.addClusterEventHandler(hueHandler);
 			// opening connection
 			carpet.openConnection();
 			
-		} catch (URISyntaxException e) {
+		} catch (Exception e) {
 			System.err.println("Could not connect to socket");
 			e.printStackTrace();
 		}
