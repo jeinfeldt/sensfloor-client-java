@@ -94,6 +94,12 @@ public class SensFloor {
 		clusterHandlers.clear();
 	}
 	
+	public void listenForReferenceTile(){
+		//socket = connector.connect();
+		// listen for reference tile
+		//socket.on("cluster", new ClusterListener(clusterHandlers))
+	}
+	
 	// utilities
 	private Properties readProperties(String propertyFile) throws IOException{
 		Properties prop = new Properties();
