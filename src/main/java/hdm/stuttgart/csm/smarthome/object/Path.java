@@ -10,6 +10,12 @@ public class Path {
 	private Direction reference;
 	private Double lastReferenceDistance;
 	
+	public Path(){
+		this.lastTile = new Tile(0,0,0);
+		this.actTile = new Tile(0,0,0);
+		this.referenceTile = null;
+	}
+	
 	public Path(Tile referenceTile){
 		this.lastTile = new Tile(0,0,0);
 		this.actTile = new Tile(0,0,0);
@@ -55,13 +61,16 @@ public class Path {
 	
 	private void refreshReference(){
 		this.reference = Direction.UNCHANGED;
-		double actDistance = calculateDistance(actTile.getPosX(), referenceTile.getPosX(), actTile.getPosY(), referenceTile.getPosY());
+		// guard clause for null values
+		if(actTile == null || referenceTile == null){
+			return;
+		}
 		// guard clause for reference distance
+		double actDistance = calculateDistance(actTile.getPosX(), referenceTile.getPosX(), actTile.getPosY(), referenceTile.getPosY());
 		if(lastReferenceDistance == null){
 			lastReferenceDistance = actDistance;
 			return;
 		}
-		
 		// if distances can be compared
 		if(actDistance < lastReferenceDistance){
 			this.reference = Direction.DECR_REFERENCE_DIST;
@@ -90,5 +99,13 @@ public class Path {
 	
 	public Tile getLastTile(){
 		return this.lastTile;
+	}
+	
+	public Tile getReferenceTile(){
+		return this.getReferenceTile();
+	}
+	
+	public void setReferenceTile(Tile tile){
+		this.referenceTile = tile;
 	}
 }

@@ -30,8 +30,7 @@ public class App {
 			ClusterEventHandler hueHandler = new HueClusterEventHandler(HUE_URL, true);
 			carpet.addClusterEventHandler(hueHandler);
 			// opening connection
-			carpet.openConnection();
-			
+			carpet.openConnection();			
 		} catch (Exception e) {
 			System.err.println("Could not connect to socket");
 			e.printStackTrace();

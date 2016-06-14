@@ -27,53 +27,55 @@ public class SensFloor {
 	private final String PORT_KEY = "port";
 	private final String REFERENCE_X_KEY = "referenceX";
 	private final String REFERENCE_Y_KEY = "referenceY";
+	private final String CAPACITY_THRESHOLD_KEY = "capacityThreshold";
+	private final String CLUSTER_EVENT = "cluster";
 	
 	// attributes
 	private Socket socket;
 	private ISensFloorConnector connector;
 	private List<ClusterEventHandler> clusterHandlers;
+	private ClusterListener clusterListener;
+	private Long capacityThreshold;
 	private Properties prop;
-	private Tile referenceTile = new Tile(0 ,0, 0);
+	private Tile referenceTile = null;
 	
 	// constructors
-	public SensFloor(String protocol, String address, String port){
-		this.connector = new SensFloorConnector(protocol, address, port);
-		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
-	}
-	
-	public SensFloor(String protocol, String address, String port, Tile referenceTile){
-		this.connector = new SensFloorConnector(protocol, address, port);
-		this.referenceTile = referenceTile;
-		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
-	}
-	
-	public SensFloor(ISensFloorConnector connector){
-		this.connector = connector;
-		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
-	}
-	
-	public SensFloor(ISensFloorConnector connector, Tile referenceTile){
-		this.connector = connector;
-		this.referenceTile = referenceTile;
-		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
+	public SensFloor(String protocol, String address, String port, Tile referenceTile, Long capacityThreshold){
+		init(protocol, address, port, referenceTile, capacityThreshold);
 	}
 	
 	public SensFloor(String propertyFile) throws IOException{
 		this.prop = readProperties(propertyFile);
-		this.connector = new SensFloorConnector(prop.getProperty(PROTOCOL_KEY),
-				prop.getProperty(HOST_KEY), prop.getProperty(PORT_KEY));
-		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
-		// reading reference tile
+		// reading information from properties
+		String protocol = prop.getProperty(PROTOCOL_KEY);
+		String address = prop.getProperty(HOST_KEY);
+		String port = prop.getProperty(PORT_KEY);
+		Long capacityThreshold = Long.parseLong(prop.getProperty(CAPACITY_THRESHOLD_KEY));
+		// reference  tile
 		double refX = Double.parseDouble(prop.getProperty(REFERENCE_X_KEY));
 		double refY = Double.parseDouble(prop.getProperty(REFERENCE_Y_KEY));
-		this.referenceTile = new Tile(refX, refY, 0);
+		Tile referenceTile = new Tile(refX, refY, 0);
+		init(protocol, address, port, referenceTile, capacityThreshold);
+	}
+	
+	// internal initialisation of attributes
+	private void init(String protocol, String address, String port, Tile referenceTile, Long capacityThreshold){
+		// guard clause
+		if(protocol == null || address == null || port == null ){
+			throw new IllegalArgumentException("SensFloor must at least be provided with: protocol, address and port");
+		}
+		this.connector = new SensFloorConnector(protocol, address, port);
+		this.referenceTile = referenceTile;
+		this.capacityThreshold = capacityThreshold;
+		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
+		this.clusterListener = new ClusterListener(this.clusterHandlers, this.referenceTile, this.capacityThreshold);
 	}
 	
 	// connection
 	public void openConnection() throws URISyntaxException{
 		socket = connector.connect();
 		// add event listeners
-		socket.on("cluster", new ClusterListener(clusterHandlers, referenceTile));
+		socket.on(CLUSTER_EVENT, this.clusterListener);
 	}
 	
 	public void closeConnection(){
@@ -94,10 +96,8 @@ public class SensFloor {
 		clusterHandlers.clear();
 	}
 	
-	public void listenForReferenceTile(){
-		//socket = connector.connect();
-		// listen for reference tile
-		//socket.on("cluster", new ClusterListener(clusterHandlers))
+	public void resetReferenceTile(){
+		setReferenceTile(null);
 	}
 	
 	// utilities
@@ -119,5 +119,13 @@ public class SensFloor {
 
 	public void setProperties(Properties properties) {
 		this.prop = properties;
+	}
+	
+	public void setReferenceTile(Tile tile) {
+		this.referenceTile = tile;
+	}
+	
+	public Tile getReferenceTile(){
+		return this.referenceTile;
 	}
 }
