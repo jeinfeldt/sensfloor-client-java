@@ -26,11 +26,11 @@ public class App {
 		try {
 			// connect to the machine
 			SensFloor carpet = new SensFloor(PROPERTY_PATH);
+			// opening connection
+			carpet.openConnection();
 			// initialize and add listeners
 			ClusterEventHandler hueHandler = new HueClusterEventHandler(HUE_URL, true);
 			carpet.addClusterEventHandler(hueHandler);
-			// opening connection
-			carpet.openConnection();			
 		} catch (Exception e) {
 			System.err.println("Could not connect to socket");
 			e.printStackTrace();

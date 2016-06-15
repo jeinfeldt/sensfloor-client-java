@@ -98,6 +98,7 @@ public class SensFloor {
 	
 	public void resetReferenceTile(){
 		setReferenceTile(null);
+		this.clusterListener.setReferenceTile(null);
 	}
 	
 	// utilities
@@ -126,6 +127,7 @@ public class SensFloor {
 	}
 	
 	public Tile getReferenceTile(){
+		this.referenceTile = clusterListener.getReferenceTile();
 		return this.referenceTile;
 	}
 }

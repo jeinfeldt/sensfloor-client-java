@@ -33,10 +33,8 @@ public class ClusterListener extends BaseClusterListener{
 		Tile parsedCOG = parseJSON(rawCOG);
 		Tile [] parsedPoints = parseJSON(rawPoints);
 		
-		System.out.println("Referencetile: " + referenceTile.getPosX());
 		// if first call to carpet, threshold capacity COG is set as reference
 		if(capacityThreshold != null && referenceTile == null && parsedCOG.getCapacity() >= capacityThreshold){
-			System.out.println("new reference tile");
 			referenceTile = parsedCOG;
 			path.setReferenceTile(referenceTile);
 		}
@@ -49,5 +47,13 @@ public class ClusterListener extends BaseClusterListener{
 			currentHandler.setPoints(parsedPoints);
 			currentHandler.execute();
 		}
+	}
+	
+	public void setReferenceTile(Tile tile){
+		this.referenceTile = tile;
+	}
+	
+	public Tile getReferenceTile(){
+		return this.referenceTile;
 	}
 }
