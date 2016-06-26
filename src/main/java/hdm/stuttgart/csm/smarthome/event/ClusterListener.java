@@ -19,7 +19,7 @@ public class ClusterListener extends BaseClusterListener{
 		this.list = list;
 		this.referenceTile = referenceTile;
 		this.capacityThreshold = capacityThreshold;
-		this.path = new Path();
+		this.path = new Path(referenceTile);
 	}
 	
 	public void call(Object... args) {

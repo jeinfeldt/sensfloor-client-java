@@ -34,7 +34,7 @@ public class IngoApp {
 	public static void main(String[] args) throws URISyntaxException {
 		// socket listener for node service
 		//String socketHost = PROTOCOL+PROTOCOL_SEPERATOR+LOCALHOST+PORT_SEPERATOR+PORT; 
-		String socketHost = "http://192.168.178.20:3000";
+		String socketHost = "http://localhost:3000";
 		socky = IO.socket(socketHost);
 		socky.on(SET_REFERENCE, new ReferenceListener());
 		socky.connect();
@@ -46,7 +46,7 @@ public class IngoApp {
 			// opening connection
 			carpet.openConnection();
 			// initialize and add listeners
-			NodeClusterEventHandler nodeHandler = new NodeClusterEventHandler(socky, true);
+			NodeClusterEventHandler nodeHandler = new NodeClusterEventHandler(socky);
 			carpet.addClusterEventHandler(nodeHandler);
 		} catch (Exception e) {
 			System.err.println("Could not connect to sensfloor socket");
