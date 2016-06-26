@@ -15,25 +15,28 @@ public class IngoApp {
 	public static final String PORT_SEPERATOR = ":";
 	public static final String PROTOCOL_SEPERATOR = "://";
 	public static final String PORT = "8000";
-	public static final String RESET_REFERENCE = "reset_reference";
+	public static final String SET_REFERENCE = "set_reference";
 	public static final String PROPERTY_PATH = "sensfloor-config.properties";
 	
 	// variables
 	public static SensFloor carpet;
+	public static Socket socky;
 	
 	// event listener
 	public static class ReferenceListener implements Emitter.Listener {
 
 		public void call(Object... args) {
+			System.out.println("Reference resetet");
 			carpet.resetReferenceTile();
 		}
 	}
 	
 	public static void main(String[] args) throws URISyntaxException {
 		// socket listener for node service
-		String socketHost = PROTOCOL+PROTOCOL_SEPERATOR+LOCALHOST+PORT_SEPERATOR+PORT; 
-		Socket socky = IO.socket(socketHost);
-		socky.on(RESET_REFERENCE, new ReferenceListener());
+		//String socketHost = PROTOCOL+PROTOCOL_SEPERATOR+LOCALHOST+PORT_SEPERATOR+PORT; 
+		String socketHost = "http://192.168.178.20:3000";
+		socky = IO.socket(socketHost);
+		socky.on(SET_REFERENCE, new ReferenceListener());
 		socky.connect();
 		
 		// initialisation for sensfloor

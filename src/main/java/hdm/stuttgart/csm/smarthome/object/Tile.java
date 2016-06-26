@@ -56,4 +56,26 @@ public class Tile {
 	public long getCapacity(){
 		return this.capacity;
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		
+		// check reference
+		if(!(obj instanceof Tile)){
+			return false;
+		}
+		
+		if(obj == this){
+			return true;
+		}
+		
+		// check attributes
+		Tile tile = (Tile) obj;
+		
+		if(tile.getPosX() == posX && tile.getPosY() == posY){
+			return true;
+		}
+		
+		return false;
+	}
 }
