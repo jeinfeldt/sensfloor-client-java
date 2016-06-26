@@ -85,6 +85,9 @@ public class SensFloor {
 	
 	//logic
 	public void addClusterEventHandler(ClusterEventHandler handler){
+		// init handler with current path
+		handler.setPath(this.clusterListener.getPath());
+		// add to list
 		clusterHandlers.add(handler);
 	}
 	

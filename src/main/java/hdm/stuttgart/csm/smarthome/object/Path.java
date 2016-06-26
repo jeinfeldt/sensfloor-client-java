@@ -102,7 +102,7 @@ public class Path {
 	}
 	
 	public Tile getReferenceTile(){
-		return referenceTile;
+		return this.referenceTile;
 	}
 	
 	public void setReferenceTile(Tile tile){

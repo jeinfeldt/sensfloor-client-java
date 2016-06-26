@@ -56,4 +56,8 @@ public class ClusterListener extends BaseClusterListener{
 	public Tile getReferenceTile(){
 		return this.referenceTile;
 	}
+	
+	public Path getPath(){
+		return this.path;
+	}
 }
