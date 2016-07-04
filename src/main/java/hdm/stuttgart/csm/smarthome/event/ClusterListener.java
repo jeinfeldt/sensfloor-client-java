@@ -35,6 +35,7 @@ public class ClusterListener extends BaseClusterListener{
 		
 		// if first call to carpet, threshold capacity COG is set as reference
 		if(capacityThreshold != null && referenceTile == null && parsedCOG.getCapacity() >= capacityThreshold){
+			System.out.println("Resetting reference in listener");
 			referenceTile = parsedCOG;
 			path.setReferenceTile(referenceTile);
 		}

@@ -52,10 +52,13 @@ public class SensFloor {
 		String port = prop.getProperty(PORT_KEY);
 		Long capacityThreshold = Long.parseLong(prop.getProperty(CAPACITY_THRESHOLD_KEY));
 		// reference  tile
-		double refX = Double.parseDouble(prop.getProperty(REFERENCE_X_KEY));
-		double refY = Double.parseDouble(prop.getProperty(REFERENCE_Y_KEY));
-		Tile referenceTile = new Tile(refX, refY, 0);
-		init(protocol, address, port, referenceTile, capacityThreshold);
+		Tile refTile = null;
+		if(prop.getProperty(REFERENCE_X_KEY)!=null && prop.getProperty(REFERENCE_Y_KEY)!=null){
+			double refX = Double.parseDouble(prop.getProperty(REFERENCE_X_KEY));
+			double refY = Double.parseDouble(prop.getProperty(REFERENCE_Y_KEY));
+			refTile = new Tile(refX, refY, 0);
+		}
+		init(protocol, address, port, refTile, capacityThreshold);
 	}
 	
 	// internal initialisation of attributes

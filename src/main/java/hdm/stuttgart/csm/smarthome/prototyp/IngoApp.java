@@ -46,7 +46,7 @@ public class IngoApp {
 			// opening connection
 			carpet.openConnection();
 			// initialize and add listeners
-			NodeClusterEventHandler nodeHandler = new NodeClusterEventHandler(socky);
+			NodeClusterEventHandler nodeHandler = new NodeClusterEventHandler(socky, carpet.getReferenceTile());
 			carpet.addClusterEventHandler(nodeHandler);
 		} catch (Exception e) {
 			System.err.println("Could not connect to sensfloor socket");

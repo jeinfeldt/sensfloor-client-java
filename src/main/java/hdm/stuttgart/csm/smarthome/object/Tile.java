@@ -78,4 +78,15 @@ public class Tile {
 		
 		return false;
 	}
+	
+	@Override
+	public String toString(){
+		return "Tile x: " + posX + " y: " + posY;
+	}
+	
+	@Override
+	public Tile clone(){
+		Tile t = new Tile(posX, posY, capacity);
+		return t;
+	}
 }

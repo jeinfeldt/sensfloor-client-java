@@ -2,6 +2,7 @@ package hdm.stuttgart.csm.smarthome.prototyp;
 
 import hdm.stuttgart.csm.smarthome.event.ClusterEventHandler;
 import hdm.stuttgart.csm.smarthome.object.Direction;
+import hdm.stuttgart.csm.smarthome.object.Path;
 import hdm.stuttgart.csm.smarthome.object.Tile;
 import io.socket.client.Socket;
 
@@ -15,8 +16,9 @@ public class NodeClusterEventHandler extends ClusterEventHandler{
 	private Socket socket;
 	private Tile referenceTile;
 	
-	public NodeClusterEventHandler(Socket socket) {
+	public NodeClusterEventHandler(Socket socket, Tile referenceTile) {
 		this.socket = socket;
+		this.referenceTile = referenceTile;
 	}
 	
 	@Override
@@ -41,7 +43,7 @@ public class NodeClusterEventHandler extends ClusterEventHandler{
 	}
 	
 	/**
-	 * Event is fired to node server if reference tile is resetet
+	 * Event is fired to node server if reference tile is reset
 	 */
 	private void fireReferenceEvent(){
 		String data = "";
@@ -49,14 +51,19 @@ public class NodeClusterEventHandler extends ClusterEventHandler{
 		if(path.getReferenceTile() != null){
 			// cache current tile
 			if(!path.getReferenceTile().equals(referenceTile)){
+				System.out.println("Emitting reference");
 				double x = path.getReferenceTile().getPosX();
 				double y = path.getReferenceTile().getPosY();
-				System.out.println("Caching and Emitting da reference");
 				data = "{\"x\": \""  + x + "\", \"y\": \"" + y + "\"}";
 				socket.emit(EVENT_REFERENCE, data);
-				this.referenceTile = path.getReferenceTile();
+				this.referenceTile = path.getReferenceTile().clone();
 			}
 		}
+	}
+	
+	@Override
+	public void setPath(Path path){
+		this.path = path;
 	}
 
 }
