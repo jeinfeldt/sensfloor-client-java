@@ -17,6 +17,7 @@ public class IngoApp {
 	public static final String PORT = "8000";
 	public static final String SET_REFERENCE = "set_reference";
 	public static final String PROPERTY_PATH = "sensfloor-config.properties";
+	public static final String SMARTLAB_HOST = "192.168.178.25";
 	
 	// variables
 	public static SensFloor carpet;
