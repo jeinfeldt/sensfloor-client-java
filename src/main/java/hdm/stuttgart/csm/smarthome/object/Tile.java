@@ -81,7 +81,7 @@ public class Tile {
 	
 	@Override
 	public String toString(){
-		return "Tile x: " + posX + " y: " + posY;
+		return "Tile x: " + posX + " y: " + posY + " capacity: " + capacity;
 	}
 	
 	@Override

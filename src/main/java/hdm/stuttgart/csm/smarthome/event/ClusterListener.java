@@ -14,15 +14,25 @@ public class ClusterListener extends BaseClusterListener{
 	private Path path;
 	private Tile referenceTile;
 	private Long capacityThreshold;
+	private int socketDelay;
+	private int counter;
 	
 	public ClusterListener(List <ClusterEventHandler> list, Tile referenceTile, Long capacityThreshold){
 		this.list = list;
 		this.referenceTile = referenceTile;
 		this.capacityThreshold = capacityThreshold;
 		this.path = new Path(referenceTile);
+		this.counter = 0;
+		this.socketDelay = 40;
 	}
 	
 	public void call(Object... args) {
+		// delay execution if necessary
+		counter++;
+		if(counter<socketDelay){
+			return;
+		}
+		counter=0;
 		// parse json
 		try {
 			readJSON(args[0].toString());
@@ -32,14 +42,11 @@ public class ClusterListener extends BaseClusterListener{
 		// init values
 		Tile parsedCOG = parseJSON(rawCOG);
 		Tile [] parsedPoints = parseJSON(rawPoints);
-		
 		// if first call to carpet, threshold capacity COG is set as reference
 		if(capacityThreshold != null && referenceTile == null && parsedCOG.getCapacity() >= capacityThreshold){
-			System.out.println("Resetting reference in listener");
 			referenceTile = parsedCOG;
 			path.setReferenceTile(referenceTile);
 		}
-		
 		// prepare and execute listeners
 		for(ClusterEventHandler currentHandler: list){
 			path.setActTile(parsedCOG);

@@ -22,7 +22,7 @@ public class Path {
 		this.referenceTile = referenceTile;
 	}
 	
-	// logic
+	// LOGIC
 	/**
 	 * Refresshes path information with current tile from carpet. All direction information are
 	 * automatically updated after calling this method.
@@ -34,7 +34,7 @@ public class Path {
 		refreshDirections();
 	}
 		
-	// utilities
+	// UTILITIES
 	private void refreshDirections(){
 		refreshX();
 		refreshY();

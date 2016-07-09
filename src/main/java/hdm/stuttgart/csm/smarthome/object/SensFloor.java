@@ -60,20 +60,7 @@ public class SensFloor {
 		}
 		init(protocol, address, port, refTile, capacityThreshold);
 	}
-	
-	// internal initialisation of attributes
-	private void init(String protocol, String address, String port, Tile referenceTile, Long capacityThreshold){
-		// guard clause
-		if(protocol == null || address == null || port == null ){
-			throw new IllegalArgumentException("SensFloor must at least be provided with: protocol, address and port");
-		}
-		this.connector = new SensFloorConnector(protocol, address, port);
-		this.referenceTile = referenceTile;
-		this.capacityThreshold = capacityThreshold;
-		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
-		this.clusterListener = new ClusterListener(this.clusterHandlers, this.referenceTile, this.capacityThreshold);
-	}
-	
+		
 	// connection
 	public void openConnection() throws URISyntaxException{
 		socket = connector.connect();
@@ -107,18 +94,6 @@ public class SensFloor {
 		this.clusterListener.setReferenceTile(null);
 	}
 	
-	// utilities
-	private Properties readProperties(String propertyFile) throws IOException{
-		Properties prop = new Properties();
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propertyFile);
-		if (inputStream != null) {
-			prop.load(inputStream);
-		} else {
-			throw new FileNotFoundException("property file '" + propertyFile + "' not found");
-		}
-		return prop;
-	}
-	
 	// GETTERS AND SETTERS
 	public Properties getProperties() {
 		return prop;
@@ -135,5 +110,29 @@ public class SensFloor {
 	public Tile getReferenceTile(){
 		this.referenceTile = clusterListener.getReferenceTile();
 		return this.referenceTile;
+	}
+	// internal initialisation of attributes
+	private void init(String protocol, String address, String port, Tile referenceTile, Long capacityThreshold){
+		// guard clause
+		if(protocol == null || address == null || port == null ){
+			throw new IllegalArgumentException("SensFloor must at least be provided with: protocol, address and port");
+		}
+		this.connector = new SensFloorConnector(protocol, address, port);
+		this.referenceTile = referenceTile;
+		this.capacityThreshold = capacityThreshold;
+		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
+		this.clusterListener = new ClusterListener(this.clusterHandlers, this.referenceTile, this.capacityThreshold);
+	}
+	
+	// utilities
+	private Properties readProperties(String propertyFile) throws IOException{
+		Properties prop = new Properties();
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propertyFile);
+		if (inputStream != null) {
+			prop.load(inputStream);
+		} else {
+			throw new FileNotFoundException("property file '" + propertyFile + "' not found");
+		}
+		return prop;
 	}
 }

@@ -15,10 +15,12 @@ public class NodeClusterEventHandler extends ClusterEventHandler{
 	// attributes
 	private Socket socket;
 	private Tile referenceTile;
+	private Long capThreshold;
 	
-	public NodeClusterEventHandler(Socket socket, Tile referenceTile) {
+	public NodeClusterEventHandler(Socket socket, Tile referenceTile, Long capThreshold) {
 		this.socket = socket;
 		this.referenceTile = referenceTile;
+		this.capThreshold = capThreshold;
 	}
 	
 	@Override
@@ -33,11 +35,16 @@ public class NodeClusterEventHandler extends ClusterEventHandler{
 	private void fireCarpetEvent(){
 		// if certain criteria is met, notify node server
 		String data = "";
+		// guard clause for capacity - only send if someone on sensfloor
+		if(getCOG().getCapacity() <= capThreshold){
+			return;
+		}
+		// notify node if direction changed
 		if(getPath().getReferenceDirection() == Direction.DECR_REFERENCE_DIST){
-			data = "{\"status\": \"on\"}";
+			data = "{\"status\": \"off\"}";
 			socket.emit(EVENT_SENSFLOOR, data);
 		} else if(getPath().getReferenceDirection() == Direction.INCR_REFERENCE_DIST){
-			data = "{\"status\": \"off\"}";
+			data = "{\"status\": \"on\"}";
 			socket.emit(EVENT_SENSFLOOR, data);
 		}
 	}
@@ -47,11 +54,9 @@ public class NodeClusterEventHandler extends ClusterEventHandler{
 	 */
 	private void fireReferenceEvent(){
 		String data = "";
-		// notify if tile changed
 		if(path.getReferenceTile() != null){
-			// cache current tile
+			// if tile changed notify node
 			if(!path.getReferenceTile().equals(referenceTile)){
-				System.out.println("Emitting reference");
 				double x = path.getReferenceTile().getPosX();
 				double y = path.getReferenceTile().getPosY();
 				data = "{\"x\": \""  + x + "\", \"y\": \"" + y + "\"}";

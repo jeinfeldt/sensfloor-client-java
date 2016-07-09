@@ -46,9 +46,32 @@ public abstract class BaseClusterListener implements Emitter.Listener{
 	}
 	
 	protected Tile parseJSON(JSONObject tile){
-		Double x =  Double.parseDouble((String)tile.get(X_KEY));
-		Double y = Double.parseDouble((String)tile.get(Y_KEY));;
-		Long c = (Long) tile.get(CAPACITY_KEY);
+		Object tmpX = tile.get(X_KEY);
+		Object tmpY = tile.get(Y_KEY);
+		Object tmpC = tile.get(CAPACITY_KEY);
+		Double x = null;
+		Double y = null;
+		Long c = null;
+		
+		// parsing x
+		if(tmpX instanceof Double){
+			x = (Double) tmpX;
+		} else if(tmpX instanceof String){
+			x = Double.parseDouble((String) tmpX);
+		}
+		// parsing y
+		if(tmpY instanceof Double){
+			y = (Double) tmpY;
+		} else if(tmpY instanceof String){
+			y = Double.parseDouble((String) tmpY);
+		}
+		// parsing capacity
+		if(tmpC instanceof Long){
+			c = (Long) tmpC;
+		} else if(tmpC instanceof String){
+			c = Long.parseLong((String)tmpC);
+		}
+		
 		return new Tile(x, y, c);
 	}
 }
