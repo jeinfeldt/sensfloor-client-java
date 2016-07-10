@@ -18,7 +18,7 @@ public class IngoApp {
 	public static final String SET_REFERENCE = "set_reference";
 	public static final String PROPERTY_PATH = "sensfloor-config.properties";
 	public static final String SMARTLAB_HOST = "192.168.178.28";
-	public static final Long CAP_THRESHOLD = 100l;
+	public static final Long CAP_THRESHOLD = 90l;
 	
 	// variables
 	public static SensFloor carpet;

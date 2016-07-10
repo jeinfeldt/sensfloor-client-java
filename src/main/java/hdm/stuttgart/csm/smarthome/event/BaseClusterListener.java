@@ -52,7 +52,7 @@ public abstract class BaseClusterListener implements Emitter.Listener{
 		Double x = null;
 		Double y = null;
 		Long c = null;
-		
+	
 		// parsing x
 		if(tmpX instanceof Double){
 			x = (Double) tmpX;
