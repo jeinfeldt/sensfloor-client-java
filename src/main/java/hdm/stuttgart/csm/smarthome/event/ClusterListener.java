@@ -17,13 +17,13 @@ public class ClusterListener extends BaseClusterListener{
 	private int socketDelay;
 	private int counter;
 	
-	public ClusterListener(List <ClusterEventHandler> list, Tile referenceTile, Long capacityThreshold){
+	public ClusterListener(List <ClusterEventHandler> list, Tile referenceTile, Long capacityThreshold, int socketDelay){
 		this.list = list;
 		this.referenceTile = referenceTile;
 		this.capacityThreshold = capacityThreshold;
 		this.path = new Path(referenceTile);
 		this.counter = 0;
-		this.socketDelay = 40;
+		this.socketDelay = socketDelay;
 	}
 	
 	public void call(Object... args) {

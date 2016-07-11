@@ -27,6 +27,7 @@ public class SensFloor {
 	private final String PORT_KEY = "port";
 	private final String REFERENCE_X_KEY = "referenceX";
 	private final String REFERENCE_Y_KEY = "referenceY";
+	private final String SOCKET_DELAY_KEY = "socketDelay";
 	private final String CAPACITY_THRESHOLD_KEY = "capacityThreshold";
 	private final String CLUSTER_EVENT = "cluster";
 	
@@ -38,10 +39,11 @@ public class SensFloor {
 	private Long capacityThreshold;
 	private Properties prop;
 	private Tile referenceTile = null;
+	private int socketDelay;
 	
 	// constructors
-	public SensFloor(String protocol, String address, String port, Tile referenceTile, Long capacityThreshold){
-		init(protocol, address, port, referenceTile, capacityThreshold);
+	public SensFloor(String protocol, String address, String port, Tile referenceTile, Long capacityThreshold, int socketDelay){
+		init(protocol, address, port, referenceTile, capacityThreshold, socketDelay);
 	}
 	
 	public SensFloor(String propertyFile) throws IOException{
@@ -50,15 +52,23 @@ public class SensFloor {
 		String protocol = prop.getProperty(PROTOCOL_KEY);
 		String address = prop.getProperty(HOST_KEY);
 		String port = prop.getProperty(PORT_KEY);
-		Long capacityThreshold = Long.parseLong(prop.getProperty(CAPACITY_THRESHOLD_KEY));
-		// reference  tile
+		int socketDelay = Integer.parseInt(prop.getProperty(SOCKET_DELAY_KEY));
+		
+		// optional properties
 		Tile refTile = null;
+		Long capacityThreshold = null;
+		
+		// capacity
+		if(prop.getProperty(CAPACITY_THRESHOLD_KEY) != null){
+			capacityThreshold = Long.parseLong(prop.getProperty(CAPACITY_THRESHOLD_KEY));			
+		}
+		// reference  tile
 		if(prop.getProperty(REFERENCE_X_KEY)!=null && prop.getProperty(REFERENCE_Y_KEY)!=null){
 			double refX = Double.parseDouble(prop.getProperty(REFERENCE_X_KEY));
 			double refY = Double.parseDouble(prop.getProperty(REFERENCE_Y_KEY));
 			refTile = new Tile(refX, refY, 0);
 		}
-		init(protocol, address, port, refTile, capacityThreshold);
+		init(protocol, address, port, refTile, capacityThreshold, socketDelay);
 	}
 		
 	// connection
@@ -112,7 +122,7 @@ public class SensFloor {
 		return this.referenceTile;
 	}
 	// internal initialisation of attributes
-	private void init(String protocol, String address, String port, Tile referenceTile, Long capacityThreshold){
+	private void init(String protocol, String address, String port, Tile referenceTile, Long capacityThreshold, int socketDelay){
 		// guard clause
 		if(protocol == null || address == null || port == null ){
 			throw new IllegalArgumentException("SensFloor must at least be provided with: protocol, address and port");
@@ -120,8 +130,9 @@ public class SensFloor {
 		this.connector = new SensFloorConnector(protocol, address, port);
 		this.referenceTile = referenceTile;
 		this.capacityThreshold = capacityThreshold;
+		this.socketDelay = socketDelay;
 		this.clusterHandlers = new ArrayList<ClusterEventHandler>();
-		this.clusterListener = new ClusterListener(this.clusterHandlers, this.referenceTile, this.capacityThreshold);
+		this.clusterListener = new ClusterListener(this.clusterHandlers, this.referenceTile, this.capacityThreshold, this.socketDelay);
 	}
 	
 	// utilities
