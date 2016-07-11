@@ -7,6 +7,12 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
+/***
+ * Example application using the sensfloor-client. In this implementation the sensfloor is
+ * used to communicate with a node app. 
+ * 
+ * @author Joerg Einfeldt, Thomas Derleth, Merle Hiort, Marc Stauffer
+ */
 public class NodeExampleApp {
 	
 	// constants
@@ -19,11 +25,9 @@ public class NodeExampleApp {
 	public static SensFloor carpet;
 	public static Socket socky;
 	
-	// event listener
+	// event listener for communication with node app
 	public static class ReferenceListener implements Emitter.Listener {
-
 		public void call(Object... args) {
-			System.out.println("Reference resetet");
 			carpet.resetReferenceTile();
 		}
 	}
@@ -40,7 +44,7 @@ public class NodeExampleApp {
 			carpet = new SensFloor(PROPERTY_PATH);
 			// opening connection
 			carpet.openConnection();
-			// initialize and add listeners
+			// initialise and add listeners
 			NodeClusterEventHandler nodeHandler = new NodeClusterEventHandler(socky, carpet.getReferenceTile(), CAP_THRESHOLD);
 			carpet.addClusterEventHandler(nodeHandler);
 		} catch (Exception e) {

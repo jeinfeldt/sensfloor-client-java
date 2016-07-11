@@ -2,10 +2,13 @@ package hdm.stuttgart.csm.smarthome.example;
 
 import hdm.stuttgart.csm.smarthome.event.ClusterEventHandler;
 import hdm.stuttgart.csm.smarthome.object.Direction;
-import hdm.stuttgart.csm.smarthome.object.Path;
 import hdm.stuttgart.csm.smarthome.object.Tile;
 import io.socket.client.Socket;
 
+/**
+ * Event handler which communicates with node app based on sensfloor status.
+ * @author Joerg Einfeldt, Thomas Derleth, Merle Hiort, Marc Stauffer
+ */
 public class NodeClusterEventHandler extends ClusterEventHandler{
 
 	// constants
@@ -17,6 +20,12 @@ public class NodeClusterEventHandler extends ClusterEventHandler{
 	private Tile referenceTile;
 	private Long capThreshold;
 	
+	/**
+	 * Initialises event handler 
+	 * @param socket Socket for communication with node server
+	 * @param referenceTile Reference tile of the sensfloor
+	 * @param capThreshold Capacity threshold for interaction with node
+	 */
 	public NodeClusterEventHandler(Socket socket, Tile referenceTile, Long capThreshold) {
 		this.socket = socket;
 		this.referenceTile = referenceTile;
@@ -29,9 +38,7 @@ public class NodeClusterEventHandler extends ClusterEventHandler{
 		fireReferenceEvent();
 	}
 	
-	/**
-	 * Event is fired to node server in refernce tile is approached
-	 */
+	// notify node server if distance to reference tile increases or decreases
 	private void fireCarpetEvent(){
 		// if certain criteria is met, notify node server
 		String data = "";
@@ -49,9 +56,7 @@ public class NodeClusterEventHandler extends ClusterEventHandler{
 		}
 	}
 	
-	/**
-	 * Event is fired to node server if reference tile is reset
-	 */
+	// if reference is reseted succesfully, call node server
 	private void fireReferenceEvent(){
 		String data = "";
 		if(path.getReferenceTile() != null){
@@ -65,10 +70,4 @@ public class NodeClusterEventHandler extends ClusterEventHandler{
 			}
 		}
 	}
-	
-	@Override
-	public void setPath(Path path){
-		this.path = path;
-	}
-
 }

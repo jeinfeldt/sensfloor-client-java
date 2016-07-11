@@ -15,12 +15,14 @@ import hdm.stuttgart.csm.smarthome.event.ClusterEventHandler;
 import io.socket.client.Socket;
 
 /**
- * SensFloor Class for Interaction with the SensFloor Carpet
- * 1. Initialize with SensFloor address
- * 2. Add specific event listeners (clusters)
- * 3. Open Connection
+ * Main class for interaction with a sensfloor. Handles
+ * the connection process and the orchestration of the configration
+ * and event handling.
+ * 
+ * @author Joerg Einfeldt, Thomas Derleth, Merle Hiort, Marc Stauffer
  */
 public class SensFloor {
+	
 	// constants
 	private final String PROTOCOL_KEY = "protocol";
 	private final String HOST_KEY = "host";
@@ -41,14 +43,27 @@ public class SensFloor {
 	private Tile referenceTile = null;
 	private int socketDelay;
 	
-	// constructors
+	/**
+	 * Initialises sensfloor with given values. Protocol, address, port are binding.
+	 * @param protocol Connection protocoll for sensfloor (http)
+	 * @param address Connection address for sensfloor (IP)
+	 * @param port Connection port for sensfloor (8000)
+	 * @param referenceTile Reference tile for sensfloor interaction (can be null)
+	 * @param capacityThreshold Threshold used for reseting reference tile (can be null)
+	 * @param socketDelay Delay for sensfloor interaction (0 for no delay)
+	 */
 	public SensFloor(String protocol, String address, String port, Tile referenceTile, Long capacityThreshold, int socketDelay){
 		init(protocol, address, port, referenceTile, capacityThreshold, socketDelay);
 	}
 	
+	/**
+	 * Initialises sensfloor with values read from property file.
+	 * @param propertyFile File to read
+	 * @throws IOException Thrown if property file cannot be read
+	 */
 	public SensFloor(String propertyFile) throws IOException{
-		this.prop = readProperties(propertyFile);
 		// reading information from properties
+		this.prop = readProperties(propertyFile);
 		String protocol = prop.getProperty(PROTOCOL_KEY);
 		String address = prop.getProperty(HOST_KEY);
 		String port = prop.getProperty(PORT_KEY);
@@ -71,19 +86,28 @@ public class SensFloor {
 		init(protocol, address, port, refTile, capacityThreshold, socketDelay);
 	}
 		
-	// connection
+	/**
+	 * Open connection to sensfloor, no communication is executed until this method is called. 
+	 * @throws URISyntaxException
+	 */
 	public void openConnection() throws URISyntaxException{
 		socket = connector.connect();
 		// add event listeners
 		socket.on(CLUSTER_EVENT, this.clusterListener);
 	}
 	
+	/**
+	 * Closes connection to sensfloor.
+	 */
 	public void closeConnection(){
 		connector.disconnect();
 		socket = null;
 	}
 	
-	//logic
+	/**
+	 * Adds handler for event "cluster" to event scheduling
+	 * @param handler Handler to be added
+	 */
 	public void addClusterEventHandler(ClusterEventHandler handler){
 		// init handler with current path
 		handler.setPath(this.clusterListener.getPath());
@@ -91,37 +115,40 @@ public class SensFloor {
 		clusterHandlers.add(handler);
 	}
 	
+	/**
+	 * Removes handler for event "cluster" from event scheduling 
+	 * @param handler
+	 */
 	public void removeClusterEventHandler(ClusterEventHandler handler){
 		clusterHandlers.remove(handler);
 	}
 	
+	/**
+	 * Removes all handlers for event "cluster"
+	 */
 	public void clearClusterEventHandlers(){
 		clusterHandlers.clear();
 	}
 	
+	/**
+	 * Set reference tile to null for event scheduling
+	 */
 	public void resetReferenceTile(){
-		setReferenceTile(null);
+		this.referenceTile = null;
 		this.clusterListener.setReferenceTile(null);
 	}
 	
-	// GETTERS AND SETTERS
-	public Properties getProperties() {
-		return prop;
-	}
-
-	public void setProperties(Properties properties) {
-		this.prop = properties;
-	}
-	
-	public void setReferenceTile(Tile tile) {
-		this.referenceTile = tile;
-	}
-	
+	/**
+	 * 
+	 * Get currently used reference tile
+	 * @return Reference tile
+	 */
 	public Tile getReferenceTile(){
 		this.referenceTile = clusterListener.getReferenceTile();
 		return this.referenceTile;
 	}
-	// internal initialisation of attributes
+	
+	// initialises all attributes
 	private void init(String protocol, String address, String port, Tile referenceTile, Long capacityThreshold, int socketDelay){
 		// guard clause
 		if(protocol == null || address == null || port == null ){
@@ -135,7 +162,7 @@ public class SensFloor {
 		this.clusterListener = new ClusterListener(this.clusterHandlers, this.referenceTile, this.capacityThreshold, this.socketDelay);
 	}
 	
-	// utilities
+	// reads properties from file
 	private Properties readProperties(String propertyFile) throws IOException{
 		Properties prop = new Properties();
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propertyFile);
