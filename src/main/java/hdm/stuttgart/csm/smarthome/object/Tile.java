@@ -1,15 +1,30 @@
 package hdm.stuttgart.csm.smarthome.object;
 
+/**
+ * A representation of a SensFloor tile consisting of an x position, an y position and the measured capacity.
+ *
+ * @author Joerg Einfeldt, Thomas Derleth, Merle Hiort, Marc Stauffer
+ */
 public class Tile {
 
+	/**
+	 * The x position of this Tile
+	 */
 	private double posX; 
+	/**
+	 * The y position of this Tile
+	 */
 	private double posY;
+	/**
+	 * The measured capacity of this Tile
+	 */
 	private long capacity;
 	
 	/**
-	 * Create a new Tile instance with posX and posY
-	 * @param posX
-	 * @param posY
+	 * Create a new Tile instance with posX, posY and a capacity
+	 * @param posX the x position
+	 * @param posY the y position
+	 * @param capacity the capacity
 	 */
 	public Tile(double posX, double posY, long capacity){
 		this.posX = posX;
@@ -18,40 +33,40 @@ public class Tile {
 	}
 	
 	/**
-	 * check if a tile has weight on it
-	 * @return
+	 * Checks if a tile has measured a capacity
+	 * @return true if the capacity is not 0, false otherwise
 	 */
 	public boolean isActive(){
 		return (this.getCapacity() > 0);
 	}
 	
 	/**
-	 * Get the tiles x position
-	 * @return
+	 * Gets the tiles x position
+	 * @return the x position
 	 */
 	public double getPosX(){
 		return this.posX;
 	}
 	
 	/**
-	 * Get the tile's y position
-	 * @return
+	 * Gets the tile's y position
+	 * @return the y position
 	 */
 	public double getPosY(){
 		return this.posY;
 	}
 	
 	/**
-	 * Set the weight of the tile
-	 * @param weight
+	 * Sets the capacity of the tile
+	 * @param the current capacity
 	 */
 	public void setCapacity(long capacity){
 		this.capacity = capacity;
 	}
 	
 	/**
-	 * Get the tile's weight
-	 * @return
+	 * Gets the tile's capacity
+	 * @return the current capacity
 	 */
 	public long getCapacity(){
 		return this.capacity;

@@ -61,6 +61,7 @@ public class ClusterListener extends BaseClusterListener{
 	/**
 	 * Parses the incoming data from the cluster event, sets a reference point if necessary and executes all event handlers.
 	 */
+	@Override
 	public void call(Object... args) {
 		// delay execution if necessary to ignore some events
 		counter++;
