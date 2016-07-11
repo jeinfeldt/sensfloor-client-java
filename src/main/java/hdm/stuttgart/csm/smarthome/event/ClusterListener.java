@@ -59,30 +59,30 @@ public class ClusterListener extends BaseClusterListener{
 	}
 	
 	/**
-	 * Parses the incoming 
+	 * Parses the incoming data from the cluster event, sets a reference point if necessary and executes all event handlers.
 	 */
 	public void call(Object... args) {
-		// delay execution if necessary
+		// delay execution if necessary to ignore some events
 		counter++;
 		if(counter<socketDelay){
 			return;
 		}
 		counter=0;
-		// parse json
+		// read the raw data and parse it to JSON objects
 		try {
 			readJSON(args[0].toString());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		// init values
+		// parse the JSON objects to Tile objects
 		Tile parsedCOG = parseJSON(rawCOG);
 		Tile [] parsedPoints = parseJSON(rawPoints);
-		// if first call to carpet, threshold capacity COG is set as reference
+		// if first call to carpet, the current COG is set as reference point for further calculations
 		if(capacityThreshold != null && referenceTile == null && parsedCOG.getCapacity() >= capacityThreshold){
 			referenceTile = parsedCOG;
 			path.setReferenceTile(referenceTile);
 		}
-		// prepare and execute listeners
+		// prepare and execute all given event handlers
 		for(ClusterEventHandler currentHandler: list){
 			path.setActTile(parsedCOG);
 			currentHandler.setPath(path);
@@ -92,14 +92,26 @@ public class ClusterListener extends BaseClusterListener{
 		}
 	}
 	
+	/**
+	 * Sets the current reference Tile used for direction calculations.
+	 * @param tile the current reference Tile
+	 */
 	public void setReferenceTile(Tile tile){
 		this.referenceTile = tile;
 	}
 	
+	/**
+	 * Returns the current reference Tile used for direction calculations.
+	 * @return the current reference Tile
+	 */
 	public Tile getReferenceTile(){
 		return this.referenceTile;
 	}
 	
+	/**
+	 * Returns the current path consisting of the current and the last COG.
+	 * @return
+	 */
 	public Path getPath(){
 		return this.path;
 	}
