@@ -1,4 +1,4 @@
-package hdm.stuttgart.csm.smarthome.prototyp;
+package hdm.stuttgart.csm.smarthome.example;
 
 import hdm.stuttgart.csm.smarthome.event.ClusterEventHandler;
 import hdm.stuttgart.csm.smarthome.object.Direction;

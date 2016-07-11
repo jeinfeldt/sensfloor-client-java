@@ -52,26 +52,19 @@ public abstract class BaseClusterListener implements Emitter.Listener{
 		Double x = null;
 		Double y = null;
 		Long c = null;
-	
+		
 		// parsing x
 		if(tmpX instanceof Double){
 			x = (Double) tmpX;
-		} else if(tmpX instanceof String){
-			x = Double.parseDouble((String) tmpX);
 		}
 		// parsing y
 		if(tmpY instanceof Double){
 			y = (Double) tmpY;
-		} else if(tmpY instanceof String){
-			y = Double.parseDouble((String) tmpY);
-		}
+		} 
 		// parsing capacity
 		if(tmpC instanceof Long){
 			c = (Long) tmpC;
-		} else if(tmpC instanceof String){
-			c = Long.parseLong((String)tmpC);
 		}
-		
 		return new Tile(x, y, c);
 	}
 }

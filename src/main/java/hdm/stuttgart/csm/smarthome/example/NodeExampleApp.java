@@ -1,4 +1,4 @@
-package hdm.stuttgart.csm.smarthome.prototyp;
+package hdm.stuttgart.csm.smarthome.example;
 
 import java.net.URISyntaxException;
 
@@ -7,17 +7,12 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-public class IngoApp {
+public class NodeExampleApp {
 	
 	// constants
-	public static final String LOCALHOST = "localhost";
-	public static final String PROTOCOL = "http";
-	public static final String PORT_SEPERATOR = ":";
-	public static final String PROTOCOL_SEPERATOR = "://";
-	public static final String PORT = "8000";
 	public static final String SET_REFERENCE = "set_reference";
 	public static final String PROPERTY_PATH = "sensfloor-config.properties";
-	public static final String SMARTLAB_HOST = "192.168.178.28";
+	public static final String SOCKET_HOST = "http://localhost:3000";
 	public static final Long CAP_THRESHOLD = 90l;
 	
 	// variables
@@ -35,9 +30,7 @@ public class IngoApp {
 	
 	public static void main(String[] args) throws URISyntaxException {
 		// socket listener for node service
-		//String socketHost = PROTOCOL+PROTOCOL_SEPERATOR+LOCALHOST+PORT_SEPERATOR+PORT; 
-		String socketHost = "http://raspberrypi:3000";
-		socky = IO.socket(socketHost);
+		socky = IO.socket(SOCKET_HOST);
 		socky.on(SET_REFERENCE, new ReferenceListener());
 		socky.connect();
 		
