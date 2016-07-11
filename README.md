@@ -59,3 +59,6 @@ The concept and implementation have been prepared by:
 - Jörg Einfeldt
 - Merle Hiort
 - Marc Stauffer
+
+### License
+This project is licensed under the terms of the MIT license
