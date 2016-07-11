@@ -7,16 +7,48 @@ import org.json.simple.parser.ParseException;
 import hdm.stuttgart.csm.smarthome.object.Path;
 import hdm.stuttgart.csm.smarthome.object.Tile;
 
+/**
+ * An concrete implementation of the abstract BaseClusterListener. 
+ * In this class the cluster event received by the SensFloor is parsed into Tile objects. 
+ * Besides, a reference point is set if necessary for the calculation of the direction.
+ * Afterwards, all execute methods of the given ClusterEventHandlers are called.
+ * 
+ * @author Joerg Einfeldt, Thomas Derleth, Merle Hiort, Marc Stauffer
+ */
 public class ClusterListener extends BaseClusterListener{
 	
-	// attributes
+	/**
+	 * A list of all ClusterEventHandlers to be called on every incoming socket
+	 */
 	private List<ClusterEventHandler> list;
+	/**
+	 * The current path consisting of the current and the last COG
+	 */
 	private Path path;
+	/**
+	 * The Tile to be used as a reference point for the direction calculations
+	 */
 	private Tile referenceTile;
+	/**
+	 * A threshold that defines the minimum capacity to be handled
+	 */
 	private Long capacityThreshold;
+	/**
+	 * Defines an interval during which all incoming sockets are ignored
+	 */
 	private int socketDelay;
+	/**
+	 * A counter to check if the interval duration is reached
+	 */
 	private int counter;
 	
+	/**
+	 * Constructor of a ClusterListener
+	 * @param list list of ClusterEventHandlers to be called by every socket
+	 * @param referenceTile the Tile to be used 
+	 * @param capacityThreshold the threshold to be used
+	 * @param socketDelay the delay interval to be used
+	 */
 	public ClusterListener(List <ClusterEventHandler> list, Tile referenceTile, Long capacityThreshold, int socketDelay){
 		this.list = list;
 		this.referenceTile = referenceTile;
@@ -26,6 +58,9 @@ public class ClusterListener extends BaseClusterListener{
 		this.socketDelay = socketDelay;
 	}
 	
+	/**
+	 * Parses the incoming 
+	 */
 	public void call(Object... args) {
 		// delay execution if necessary
 		counter++;
