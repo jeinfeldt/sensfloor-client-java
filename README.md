@@ -18,7 +18,7 @@ In order to use the Java client library you need to:
 ### Configuration
 You can configure different properties for the connection to the **SensFloor** in the properties file **sensfloor-config.properties**. 
 
-**Necessary properties are: **
+**Necessary properties are:**
 
 -  The protocol, host and port to be used for the connection.
 		
